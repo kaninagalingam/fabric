@@ -84,7 +84,7 @@ import (
     "time"
 
     "github.com/hyperledger/fabric/core/chaincode/shim"
-    "github.com/hyperledger/fabric/protos/peer"
+    pb "github.com/hyperledger/fabric/protos/peer"
 )
 
 // SimpleChaincode example simple Chaincode implementation
@@ -209,16 +209,7 @@ func (t *SimpleChaincode) initTransaction(stub shim.ChaincodeStubInterface, args
     //  The key is a composite key, with the elements that you want to range query on listed first.
     //  In our case, the composite key is based on indexName~color~name.
     //  This will enable very efficient state range queries based on composite keys matching indexName~color~*
-    indexName := "transactionId"
-    transactionIdIndexKey, err := stub.CreateCompositeKey(indexName, []string{Transaction.transactionId, Transaction.Receiver})
-    if err != nil {
-        return shim.Error(err.Error())
-    }
-    //  Save index entry to state. Only the key name is needed, no need to store a duplicate copy of the marble.
-    //  Note - passing a 'nil' value will effectively delete the key from state, therefore we pass null character as value
-    value := []byte{0x00}
-    stub.PutState(transactionIdIndexKey, value)
-
+   
     // ==== Marble saved and indexed. Return success ====
     fmt.Println("- end init Transaction")
     return shim.Success(nil)
